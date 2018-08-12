@@ -13,7 +13,7 @@ class MicropostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    /**public function index()
     {
         $data = [];
         if (\Auth::check()) {
@@ -29,6 +29,21 @@ class MicropostsController extends Controller
         }else {
             return view('welcome');
         }
+    }*/
+    
+    public function index()
+    {
+        $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $microposts = $user->feed_microposts()->orderBy('created_at', 'desc')->paginate(10);
+
+            $data = [
+                'user' => $user,
+                'microposts' => $microposts,
+            ];
+        }
+        return view('welcome', $data);
     }
     
     public function store(Request $request)
